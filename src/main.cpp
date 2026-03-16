@@ -51,7 +51,6 @@ int main(int argc, char* argv[]) {
         std::cerr << "HTTP error: " << response.status_code << std::endl;
         return 1;
     }
-
     json result = json::parse(response.text);
 
     if (!result.contains("choices") || result["choices"].empty()) {
