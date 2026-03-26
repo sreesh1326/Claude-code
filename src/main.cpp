@@ -4,6 +4,8 @@
 
 #include <cpr/cpr.h>
 #include <nlohmann/json.hpp>
+#include <fstream>
+#include <sstream>
 
 using json = nlohmann::json;
 
@@ -82,7 +84,33 @@ int main(int argc, char* argv[]) {
     std::cerr << "Logs from your program will appear here!" << std::endl;
 
     // TODO: Uncomment the line below to pass the first stage
-    std::cout << result["choices"][0]["message"]["content"].get<std::string>();
+    json message =  result["choices"][0]["message"];
+
+    if(message.contains("tool_calls") && !message["tool_calls"].empty() && !message["tool_calls"].is_null()){
+        json tool_call = message["tool_calls"][0];
+    std::string func_name = tool_call["function"]["name"];
+    
+    // Parse arguments — it's a JSON string, so we parse it again
+    json arguments = json::parse(tool_call["function"]["arguments"].get<std::string>());
+
+    if (func_name == "Read") {
+        std::string file_path = arguments["file_path"].get<std::string>();
+        
+        // Read the file
+        std::ifstream file(file_path);
+        if (!file.is_open()) {
+            std::cerr << "Could not open file: " << file_path << std::endl;
+            return 1;
+        }
+        std::stringstream buffer;
+        buffer << file.rdbuf();
+        std::cout << buffer.str();
+    
+    }
+} else {
+    // No tool call — print normal message
+    std::cout << message["content"].get<std::string>();
+}
 
     return 0;
 }
