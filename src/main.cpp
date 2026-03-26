@@ -1,7 +1,6 @@
 #include <cstdlib>
 #include <iostream>
 #include <string>
-
 #include <cpr/cpr.h>
 #include <nlohmann/json.hpp>
 #include <fstream>
