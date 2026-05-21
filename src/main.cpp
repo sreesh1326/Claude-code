@@ -101,7 +101,7 @@ int main(int argc, char* argv[]) {
 
     while (true) {
         json request_body = {
-            {"model", "google/gemma-3-4b-it:free"},
+            {"model", "anthropic/claude-haiku-4.5"},
             {"messages", messages},
             {"tools", tools}
         };
